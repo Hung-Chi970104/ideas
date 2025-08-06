@@ -1,3 +1,31 @@
+.bg-blue {
+  background-color: var(--color-blue);
+}
+
+.bg-orange, .text-orange {
+  background-color: var(--color-orange);
+}
+
+.text-black {
+  color: var(--color-black);
+}
+
+.text-pink {
+  color: var(--color-pink);
+}
+
+.bg-white {
+  background-color: var(--color-white);
+}
+/* Custom color variables */
+:root {
+  --color-black: #333333;
+  --color-white: #F5F5F5;
+  --color-orange: #ffb067;
+  --color-blue: #a2dce7;
+  --color-yellow: #ffed86;
+  --color-pink: #f8ccdc;
+}
 @import "tailwindcss";
 @import "tw-animate-css";
 
