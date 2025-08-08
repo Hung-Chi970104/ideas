@@ -1,3 +1,5 @@
+@import "tailwindcss";
+@import "tw-animate-css";
 .bg-beige {
   background-color: var(--color-beige);
 }
@@ -28,10 +30,10 @@
   /* Light mode colors */
   --color-black: #141413; /* text, background */
   --color-white: #faf9f5; /* background, text */
-  --color-gray: #c4c3bc; /* borders */
+  --color-dark_gray: #c4c3bc; /* borders */
   --color-beige: #f5f4ed; /* background, card background */
   --color-orange: #d97757; /* important items, logo */
-  --color-dark_gray: #e8e6dc;
+  --color-gray: #e8e6dc;
 }
 
 .dark {
@@ -42,8 +44,6 @@
   --color-beige: #262624; /* background, card background (darker beige) */
   --color-orange: #d97757; /* keep orange consistent */
 }
-@import "tailwindcss";
-@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
