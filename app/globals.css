@@ -1,5 +1,14 @@
-.bg-blue {
-  background-color: var(--color-blue);
+.bg-beige {
+  background-color: var(--color-beige);
+}
+
+
+.bg-gray {
+  background-color: var(--color-gray);
+}
+
+.border-gray {
+  border-color: var(--color-gray);
 }
 
 .bg-orange, .text-orange {
@@ -10,21 +19,28 @@
   color: var(--color-black);
 }
 
-.text-pink {
-  color: var(--color-pink);
-}
-
 .bg-white {
   background-color: var(--color-white);
 }
 /* Custom color variables */
+
 :root {
-  --color-black: #333333;
-  --color-white: #F5F5F5;
-  --color-orange: #ffb067;
-  --color-blue: #a2dce7;
-  --color-yellow: #ffed86;
-  --color-pink: #f8ccdc;
+  /* Light mode colors */
+  --color-black: #141413; /* text, background */
+  --color-white: #faf9f5; /* background, text */
+  --color-gray: #c4c3bc; /* borders */
+  --color-beige: #f5f4ed; /* background, card background */
+  --color-orange: #d97757; /* important items, logo */
+  --color-dark_gray: #e8e6dc;
+}
+
+.dark {
+  /* Dark mode colors */
+  --color-black: #faf9f5; /* text, background (inverted) */
+  --color-white: #1f1e1d; /* background, text (inverted) */
+  --color-gray: #31312f; /* borders (darker gray for dark mode) */
+  --color-beige: #262624; /* background, card background (darker beige) */
+  --color-orange: #d97757; /* keep orange consistent */
 }
 @import "tailwindcss";
 @import "tw-animate-css";
