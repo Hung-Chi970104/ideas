@@ -1,53 +1,21 @@
-'use client'
-import Link from "next/link";
-import { Authenticated, Unauthenticated } from 'convex/react';
-import { UserButton } from '@clerk/nextjs';
-import { useQuery } from 'convex/react';
-import { api } from '../convex/_generated/api';
+import { Navbar } from "@/components/navbar"
+import { Hero } from "@/components/hero"
+import { FeatureCards } from "@/components/feature-cards"
+import { ScreenshotPlaceholder } from "@/components/screenshot-placeholder"
+import { Footer } from "@/components/footer"
 
-function Dashboard() {
-  const messages = useQuery(api.messages.getForCurrentUser);
-  
+export default function HomePage() {
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <UserButton />
-      </div>
-      <div className="bg-white/5 p-6 rounded-lg">
-        <h2 className="text-xl mb-4">Your Content</h2>
-        {messages?.length ? (
-          <div>You have {messages.length} messages</div>
-        ) : (
-          <div>No content yet. Start creating!</div>
-        )}
-      </div>
+    <div className="min-h-screen">
+      <Navbar />
+      <main className="w-full">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Hero />
+          <FeatureCards />
+          <ScreenshotPlaceholder />
+        </div>
+      </main>
+      <Footer />
     </div>
-  );
-}
-
-function LandingPage() {
-  return (
-    <main className="flex flex-col items-center justify-center min-h-screen">
-      <Link
-        href="/sign-in"
-        className="px-6 py-3 bg-blue text-black rounded-lg font-semibold hover:bg-blue/80 transition"
-      >
-        Sign In
-      </Link>
-    </main>
-  );
-}
-
-export default function Home() {
-  return (
-    <>
-      <Authenticated>
-        <Dashboard />
-      </Authenticated>
-      <Unauthenticated>
-        <LandingPage />
-      </Unauthenticated>
-    </>
-  );
+  )
 }
