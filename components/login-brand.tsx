@@ -1,13 +1,15 @@
 import Image from "next/image"
+import Link from "next/link"
 
 export function LoginBrand() {
   return (
     <div className="w-full max-w-lg mx-auto px-8 py-12">
       <div className="text-center lg:text-left">
-        <div className="flex items-center justify-center lg:justify-start space-x-3 mb-8">
+        
+        <Link href={'/'} className="flex items-center justify-center lg:justify-start space-x-3 mb-8">
           <Image src="/logo.png" alt="Spark Logo" width={48} height={48} className="rounded-full" />
           <span className="text-3xl font-bold font-heading">Spark</span>
-        </div>
+        </Link>
 
         <h1 className="text-4xl font-bold font-heading mb-6 leading-tight">Here's to your next spark in innovation!</h1>
 
