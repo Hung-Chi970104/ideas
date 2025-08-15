@@ -1,96 +1,190 @@
+"use client"
+
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Check } from "lucide-react"
 
-const tiers = [
+type Tier = {
+  name: string
+  price: string
+  period?: string
+  description: string
+  features: string[]
+  cta: string
+  popular?: boolean
+}
+
+const tiers: Tier[] = [
   {
-    name: "Starter",
-    price: "Free",
-    description: "Perfect for exploring your first startup ideas",
-    features: ["5 idea generations per month", "Basic roadmap templates", "Community support", "Email notifications"],
-    cta: "Get Started",
-    popular: false,
+    name: "Free",
+    price: "$0",
+    cta: "Your current plan",
+    description: "Intelligence for everyday tasks",
+    features: [
+      "5 Custom Idea Generations",
+      "Basic Roadmap Templates",
+      "Community support",
+      "Email notifications"
+    ],
   },
   {
-    name: "Pro",
-    price: "$29",
-    period: "/month",
-    description: "For serious entrepreneurs ready to build",
+    name: "Plus",
+    price: "$20",
+    period: "USD / month",
+    cta: "Get Plus",
+    description: "More access to advanced intelligence",
     features: [
-      "Unlimited idea generations",
-      "Advanced roadmap customization",
-      "Market validation tools",
-      "Priority support",
+      "Unlimited Idea Generation",
+      "Advanced Roadmap Customization",
+      "Market Validation Tools",
+      "Priority Support",
       "Export to PDF/Notion",
-      "Team collaboration (up to 3 members)",
+      "Team Collaboration (Max. 4)",
     ],
-    cta: "Start Pro Trial",
     popular: true,
   },
   {
-    name: "Enterprise",
-    price: "$99",
-    period: "/month",
-    description: "For teams and organizations scaling innovation",
+    name: "Pro",
+    price: "$200",
+    period: "USD / month",
+    cta: "Get Pro",
+    description: "Full access to the best of ChatGPT",
     features: [
-      "Everything in Pro",
-      "Unlimited team members",
-      "Custom integrations",
-      "Dedicated account manager",
-      "Advanced analytics",
-      "White-label options",
-      "SLA guarantee",
+      "Everything in Plus",
+      "Unlimited Team Members",
+      "Custom Integrations",
+      "Dedicated Account Manager",
+      "Advanced Analytics",
+      "SLA Guaranteed",
+  "Unlimited subject to abuse guardrails.",
     ],
-    cta: "Contact Sales",
-    popular: false,
   },
 ]
 
 export function PricingTiers() {
+  const [plan, setPlan] = useState<"personal" | "business">("personal")
+
   return (
-    <section className="py-20">
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {tiers.map((tier) => (
-          <Card
-            key={tier.name}
-            className={`relative ${tier.popular ? "border-primary shadow-lg scale-105" : "border-border"}`}
+    <section className="py-8 relative">
+      <div className="max-w-6xl mx-auto mb-6 text-center">
+        <div className="inline-flex items-center rounded-full border border-border p-1 bg-muted/30">
+          <button
+            type="button"
+            onClick={() => setPlan("personal")}
+            className={`px-4 py-1 rounded-full text-sm font-medium transition-all ${
+              plan === "personal" ? "bg-background border border-border" : "text-muted-foreground"
+            }`}
           >
-            {tier.popular && (
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <span className="bg-gradient-to-r from-primary to-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  Most Popular
-                </span>
-              </div>
-            )}
+            Personal
+          </button>
+          <button
+            type="button"
+            onClick={() => setPlan("business")}
+            className={`px-4 py-1 rounded-full text-sm font-medium transition-all ${
+              plan === "business" ? "bg-background border border-border" : "text-muted-foreground"
+            }`}
+          >
+            Business
+          </button>
+        </div>
 
-            <CardHeader className="text-center pb-8">
-              <CardTitle className="text-2xl font-heading">{tier.name}</CardTitle>
-              <CardDescription className="text-muted-foreground">{tier.description}</CardDescription>
-              <div className="mt-4">
-                <span className="text-4xl font-bold font-heading">{tier.price}</span>
-                {tier.period && <span className="text-muted-foreground">{tier.period}</span>}
-              </div>
-            </CardHeader>
-
-            <CardContent>
-              <ul className="space-y-3">
-                {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-3">
-                    <Check className="h-4 w-4 text-primary flex-shrink-0" />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-
-            <CardFooter>
-              <Button className="w-full" variant={tier.popular ? "default" : "outline"}>
-                {tier.cta}
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+        {plan === "business" && (
+          <div className="mt-6 max-w-md mx-auto p-4 border border-border rounded-lg bg-muted/30 text-left">
+            <h3 className="text-lg font-semibold">Contact us</h3>
+            <p className="text-sm text-muted-foreground mt-1">Contact us for more information about Business plans.</p>
+            <div className="mt-3">
+              <a
+                href="/contact"
+                className="inline-block px-4 py-2 rounded-full bg-primary text-white text-sm font-medium"
+              >
+                Contact us
+              </a>
+            </div>
+          </div>
+        )}
       </div>
+
+      {plan === "personal" && (
+        <div className="grid gap-8 md:grid-cols-3 max-w-6xl mx-auto">
+          {tiers.map((tier) => {
+          const isPopular = !!tier.popular
+          const isCurrent = tier.cta.toLowerCase().includes("current")
+          const displayPrice = tier.price?.toString().startsWith("$") ? tier.price.toString().slice(1) : tier.price
+
+          return (
+            <Card
+              key={tier.name}
+              className={`relative flex flex-col h-full rounded-2xl transition-transform max-w-sm ${
+                isPopular
+                  ? "border-primary/70 shadow-2xl hover:translate-y-[-2px]"
+                  : "border-border/70 hover:translate-y-[-2px]"
+              }`}
+            >
+
+              <CardHeader className="text-left pb-2">
+                <CardTitle className="text-3xl font-heading">{tier.name}</CardTitle>
+                {isPopular && (
+                  <div className="absolute right-6">
+                    <span className="bg-orange-500 text-white px-4 py-2 rounded-full text-xs font-semibold shadow">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
+                <div className="mt-5 text-left w-full">
+                  <div className="flex items-baseline gap-2 justify-start">
+                    <span className="relative inline-block">
+                      <span className="absolute -left-2 text-2xl text-muted-foreground font-normal" aria-hidden>$</span>
+                      <span className="text-5xl ml-2 font-bold font-heading leading-none">{displayPrice}</span>
+                    </span>
+                    {tier.period && (
+                      <span className="ml-2 text-sm text-muted-foreground">{tier.period}</span>
+                    )}
+                  </div>
+                </div>
+
+                <p className="text-muted-foreground text-sm mt-4">{tier.description}</p>
+                
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    className="w-72 rounded-full"
+                    variant={isPopular ? "default" : "outline"}
+                    disabled={isCurrent}
+                    aria-label={`${tier.cta} - ${tier.name}`}
+                  >
+                    {tier.cta}
+                  </Button>
+                </div>
+              </CardHeader>
+
+              <CardContent className="flex-1 pt-4">
+                <ul className="space-y-3">
+                  {tier.features.map((feature) => {
+                    const isProNote = tier.name === "Pro" && feature.toLowerCase().includes("unlimited subject to abuse")
+                    if (isProNote) {
+                      return (
+                        <li key={feature} className="pt-12 text-xs text-muted-foreground">
+                          <span>{feature}</span>
+                        </li>
+                      )
+                    }
+
+                    return (
+                      <li key={feature} className="flex items-start gap-3">
+                        <Check className="h-4 w-4 mt-1 text-primary" />
+                        <span className="text-sm leading-6">{feature}</span>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </CardContent>
+
+              {/* CardFooter removed — CTA moved into header above description */}
+            </Card>
+          )
+          })}
+        </div>
+      )}
     </section>
   )
 }

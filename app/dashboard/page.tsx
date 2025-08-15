@@ -8,7 +8,7 @@ import type { MockIdea } from "@/lib/mock"
 
 import { useAction } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { Navbar } from "@/components/navbar"
+import { Navbar } from "@/components/Navbar"
 
 
 export default function DashboardPage() {

@@ -1,16 +1,12 @@
 import { PricingHero } from "@/components/pricing-hero"
 import { PricingTiers } from "@/components/pricing-tiers"
-import { PricingFAQ } from "@/components/pricing-faq"
-import { PricingCTA } from "@/components/pricing-cta"
 
 export default function PricingPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <PricingHero />
-        <PricingTiers />
-        <PricingFAQ />
-        <PricingCTA />
+  <PricingTiers />
       </div>
     </div>
   )
