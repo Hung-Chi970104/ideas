@@ -3,15 +3,10 @@ import { mockIdeas, mockRoadmap } from "@/lib/mock"
 import { RoadmapHeader } from "@/components/roadmap-header"
 import { RoadmapTimeline } from "@/components/roadmap-timeline"
 
-interface RoadmapPageProps {
-  params: {
-    id: string
-  }
-}
-
-export default function RoadmapPage({ params }: RoadmapPageProps) {
-  const idea = mockIdeas.find((idea) => idea.id === params.id)
-  const roadmap = mockRoadmap(params.id)
+export default async function RoadmapPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const idea = mockIdeas.find((idea) => idea.id === id)
+  const roadmap = mockRoadmap(id)
 
   if (!idea) {
     notFound()

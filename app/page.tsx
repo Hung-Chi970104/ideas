@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/navbar"
+import { Navbar } from "@/components/Navbar"
 import { Hero } from "@/components/hero"
 import { FeatureCards } from "@/components/feature-cards"
 import { ScreenshotPlaceholder } from "@/components/screenshot-placeholder"

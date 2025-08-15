@@ -11,11 +11,11 @@ export function LoginBrand() {
           <span className="text-3xl font-bold font-heading">Spark</span>
         </Link>
 
-        <h1 className="text-4xl font-bold font-heading mb-6 leading-tight">Here's to your next spark in innovation!</h1>
+  <h1 className="text-4xl font-bold font-heading mb-6 leading-tight">Here&apos;s to your next spark in innovation!</h1>
 
         <p className="text-lg text-muted-foreground leading-relaxed">
           Transform your unique skills and interests into profitable startup opportunities. Join thousands of
-          entrepreneurs who've discovered their next big idea with AI-powered insights.
+          entrepreneurs who&apos;ve discovered their next big idea with AI-powered insights.
         </p>
 
         <div className="mt-12 space-y-4">
