@@ -13,7 +13,9 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as ai from "../ai.js";
 import type * as http from "../http.js";
+import type * as open_ai from "../open_ai.js";
 import type * as users from "../users.js";
 
 /**
@@ -25,7 +27,9 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  ai: typeof ai;
   http: typeof http;
+  open_ai: typeof open_ai;
   users: typeof users;
 }>;
 export declare const api: FilterApi<
