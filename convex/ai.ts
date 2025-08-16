@@ -17,7 +17,6 @@ export const callGemini = action({
     })
   },
   handler: async (_, args) => {
-    // implementation goes here
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `
@@ -34,7 +33,7 @@ Field meanings:
 - niche: Rate how unique and specific the target market is ("High", "Med", "Low").
 - technologyUsed: List of core technologies, frameworks, or APIs needed for implementation.
 
-Return evaluations for 8 potential project ideas
+Return evaluations for 3 potential project ideas
 `,
       config: {
         responseMimeType: "application/json",
@@ -43,6 +42,12 @@ Return evaluations for 8 potential project ideas
           items: {
             type: Type.OBJECT,
             properties: {
+              targetAudience: {
+                type: Type.STRING
+              },
+              painPoint: {
+                type: Type.STRING
+              },
               marketFit: {
                 type: Type.STRING,
                 enum: ["High", "Med", "Low"]
@@ -59,17 +64,23 @@ Return evaluations for 8 potential project ideas
                 type: Type.STRING,
                 enum: ["High", "Med", "Low"]
               },
-              technologyUsed: {
+              techStack: {
                 type: Type.ARRAY,
                 items: { type: Type.STRING }
+              },
+              durationWeek: {
+                type: Type.NUMBER
               }
             },
             propertyOrdering: [
+              "targetAudience",
+              "painPoint",
               "marketFit",
               "trend",
               "feasible",
               "niche",
-              "technologyUsed"
+              "techStack",
+              "durationWeek"
             ],
           },
         },

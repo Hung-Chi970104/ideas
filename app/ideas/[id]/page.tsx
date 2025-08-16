@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation"
 import { mockIdeas } from "@/lib/mock"
-import { IdeaDetailHeader } from "@/components/idea-detail-header"
-import { IdeaDetailTabs } from "@/components/idea-detail-tabs"
-import { IdeaDetailSidebar } from "@/components/idea-detail-sidebar"
+import { IdeaDetailHeader } from "@/components/ideas/idea-detail-header"
+import { IdeaDetailTabs } from "@/components/ideas/idea-detail-tabs"
+import { IdeaDetailSidebar } from "@/components/ideas/idea-detail-sidebar"
 
 export default async function IdeaDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

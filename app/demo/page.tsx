@@ -1,6 +1,6 @@
-import { DemoHero } from "@/components/demo-hero"
-import { DemoWalkthrough } from "@/components/demo-walkthrough"
-import { DemoCTA } from "@/components/demo-cta"
+import { DemoHero } from "@/components/demo/demo-hero"
+import { DemoWalkthrough } from "@/components/demo/demo-walkthrough"
+import { DemoCTA } from "@/components/demo/demo-cta"
 
 export default function DemoPage() {
   return (

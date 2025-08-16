@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
+import { POPULAR_SKILLS, POPULAR_INTERESTS, TECH_STACKS } from "@/components/dashboard/intake-form-options"
 
 interface IntakeFormProps {
   onGenerateIdeas: (formData: IntakeFormData) => void
@@ -23,47 +24,6 @@ export interface IntakeFormData {
   targetAudience: string
   revenueGoal: string
 }
-
-const POPULAR_SKILLS = [
-  "JavaScript",
-  "Python",
-  "React",
-  "Node.js",
-  "Design",
-  "Marketing",
-  "Sales",
-  "Writing",
-  "Data Analysis",
-  "Project Management",
-]
-
-const TECH_STACKS = [
-  "Next.js",
-  "React",
-  "Vue.js",
-  "Angular",
-  "Node.js",
-  "Python",
-  "Django",
-  "Flask",
-  "PostgreSQL",
-  "MongoDB",
-  "AWS",
-  "Vercel",
-]
-
-const POPULAR_INTERESTS = [
-  "AI/ML",
-  "SaaS",
-  "E-commerce",
-  "FinTech",
-  "HealthTech",
-  "EdTech",
-  "Gaming",
-  "Social Media",
-  "Productivity",
-  "Developer Tools",
-]
 
 export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
   const [formData, setFormData] = useState<IntakeFormData>({
@@ -248,12 +208,22 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
                   <SelectValue placeholder="How much time can you dedicate?" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="evenings">Evenings (5-10 hours/week)</SelectItem>
                   <SelectItem value="part-time">Part-time (10-20 hours/week)</SelectItem>
                   <SelectItem value="full-time">Full-time (40+ hours/week)</SelectItem>
                   <SelectItem value="weekend">Weekends only</SelectItem>
-                  <SelectItem value="evenings">Evenings (5-10 hours/week)</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Project Description */}
+            <div className="space-y-3">
+              <Label className="text-base font-medium">Project Description</Label>
+              <Input
+                placeholder="What is your project about?"
+                value={formData.targetAudience}
+                onChange={(e) => setFormData((prev) => ({ ...prev, targetAudience: e.target.value }))}
+              />
             </div>
 
             {/* Target Audience */}

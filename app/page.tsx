@@ -3,7 +3,7 @@ import { Hero } from "@/components/hero"
 import { FeatureCards } from "@/components/feature-cards"
 import { ScreenshotPlaceholder } from "@/components/screenshot-placeholder"
 import { Footer } from "@/components/footer"
-import { Navbar } from "@/components/Navbar"
+import { Navbar } from "@/components/navbar"
 
 export default function HomePage() {
   return (

@@ -1,14 +1,14 @@
 "use client"
 
 import { use, useState } from "react"
-import { IntakeForm, type IntakeFormData } from "@/components/intake-form"
-import { IdeaList } from "@/components/idea-list"
+import { IntakeForm, type IntakeFormData } from "@/components/dashboard/intake-form"
+import { IdeaList } from "@/components/ideas/idea-list"
 import { mockIdeas } from "@/lib/mock"
 import type { MockIdea } from "@/lib/mock"
 
 import { useAction } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { Navbar } from "@/components/Navbar"
+import { Navbar } from "@/components/navbar"
 
 
 export default function DashboardPage() {
@@ -24,8 +24,8 @@ export default function DashboardPage() {
   const handleGenerateIdeas = async (formData: IntakeFormData) => {
     setIsGenerating(true)
 
-    const result = await runAI(formData)
-    console.log(result)
+    // const result = await runAI(formData)
+    // console.log(result)
 
     // For now, return filtered mock ideas based on form data
     // TODO: Implement actual AI generation with user preferences

@@ -1,5 +1,5 @@
-import { PricingHero } from "@/components/pricing-hero"
-import { PricingTiers } from "@/components/pricing-tiers"
+import { PricingHero } from "@/components/pricing/pricing-hero"
+import { PricingTiers } from "@/components/pricing/pricing-tiers"
 
 export default function PricingPage() {
   return (
