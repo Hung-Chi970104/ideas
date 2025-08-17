@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { mockIdeas, mockRoadmap } from "@/lib/mock"
-import { RoadmapHeader } from "@/components/roadmap-header"
-import { RoadmapTimeline } from "@/components/roadmap-timeline"
+import { RoadmapHeader } from "@/components/roadmap/roadmap-header"
+import { RoadmapTimeline } from "@/components/roadmap/roadmap-timeline"
 
 export default async function RoadmapPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

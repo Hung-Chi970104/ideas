@@ -1,4 +1,4 @@
-import { IdeaCard } from "@/components/idea-card"
+import { IdeaCard } from "./idea-card"
 import type { MockIdea } from "@/lib/mock"
 
 interface IdeaListProps {

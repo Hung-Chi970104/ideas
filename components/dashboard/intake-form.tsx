@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,102 +10,82 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
+import { POPULAR_SKILLS, POPULAR_INTERESTS, TECH_STACKS } from "@/components/dashboard/intake-form-options"
+import { Doc } from "@/convex/_generated/dataModel"
+import { useQuery } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import { useAuth } from "@clerk/nextjs"
+
+export type IntakeFormData = Omit<Doc<"dashboards">, "_id" | "_creationTime" | "userId">
+
+const DEFAULT_FORM: IntakeFormData = {
+  skills: [],
+  techStacks: [],
+  interests: [],
+  timeCommitment: undefined,
+  description: "",
+  targetAudience: "",
+  revenueGoal: undefined
+}
 
 interface IntakeFormProps {
   onGenerateIdeas: (formData: IntakeFormData) => void
 }
 
-export interface IntakeFormData {
-  skills: string[]
-  techStacks: string[]
-  interests: string[]
-  timeCommitment: string
-  targetAudience: string
-  revenueGoal: string
-}
-
-const POPULAR_SKILLS = [
-  "JavaScript",
-  "Python",
-  "React",
-  "Node.js",
-  "Design",
-  "Marketing",
-  "Sales",
-  "Writing",
-  "Data Analysis",
-  "Project Management",
-]
-
-const TECH_STACKS = [
-  "Next.js",
-  "React",
-  "Vue.js",
-  "Angular",
-  "Node.js",
-  "Python",
-  "Django",
-  "Flask",
-  "PostgreSQL",
-  "MongoDB",
-  "AWS",
-  "Vercel",
-]
-
-const POPULAR_INTERESTS = [
-  "AI/ML",
-  "SaaS",
-  "E-commerce",
-  "FinTech",
-  "HealthTech",
-  "EdTech",
-  "Gaming",
-  "Social Media",
-  "Productivity",
-  "Developer Tools",
-]
-
+// Where the page is rendered
 export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
-  const [formData, setFormData] = useState<IntakeFormData>({
-    skills: [],
-    techStacks: [],
-    interests: [],
-    timeCommitment: "",
-    targetAudience: "",
-    revenueGoal: "",
-  })
+
+  const dashboard = useQuery(api.dashboards.getDashboard)
+
+  const [formData, setFormData] = useState<IntakeFormData>(DEFAULT_FORM)
+
+  const hydratedOnce = useRef(false);
+
+  useEffect(() => {
+    if (dashboard === undefined) return
+    if (hydratedOnce.current) return
+
+    if (dashboard) {
+      const { _id, _creationTime, userId, ...rest } = dashboard as Doc<"dashboards">
+      setFormData({ ...DEFAULT_FORM, ...rest })
+    } else {
+      setFormData(DEFAULT_FORM)
+    }
+
+    hydratedOnce.current = true
+  }, [dashboard])
 
   const [skillInput, setSkillInput] = useState("")
   const [interestInput, setInterestInput] = useState("")
 
   const addSkill = (skill: string) => {
-    if (skill && !formData.skills.includes(skill)) {
-      setFormData((prev) => ({ ...prev, skills: [...prev.skills, skill] }))
+    if (skill && !formData.skills?.includes(skill)) {
+      setFormData((prev) => ({ ...prev, skills: [...(prev.skills || []), skill] }))
     }
     setSkillInput("")
   }
 
   const removeSkill = (skill: string) => {
-    setFormData((prev) => ({ ...prev, skills: prev.skills.filter((s) => s !== skill) }))
+    setFormData((prev) => ({ ...prev, skills: prev.skills?.filter((s) => s !== skill) }))
   }
 
   const addInterest = (interest: string) => {
-    if (interest && !formData.interests.includes(interest)) {
-      setFormData((prev) => ({ ...prev, interests: [...prev.interests, interest] }))
+    if (interest && !formData.interests?.includes(interest)) {
+      setFormData((prev) => ({ ...prev, interests: [...(prev.interests || []), interest] }))
     }
     setInterestInput("")
   }
 
   const removeInterest = (interest: string) => {
-    setFormData((prev) => ({ ...prev, interests: prev.interests.filter((i) => i !== interest) }))
+    setFormData((prev) => ({ ...prev, interests: prev.interests?.filter((i) => i !== interest) }))
   }
 
   const toggleTechStack = (stack: string) => {
     setFormData((prev) => ({
       ...prev,
-      techStacks: prev.techStacks.includes(stack)
+      techStacks: prev.techStacks?.includes(stack)
         ? prev.techStacks.filter((s) => s !== stack)
-        : [...prev.techStacks, stack],
+        : [...(prev.techStacks || []), stack],
     }))
   }
 
@@ -128,7 +108,7 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
             <div className="space-y-3">
               <Label className="text-base font-medium">Your Skills</Label>
               <div className="flex flex-wrap gap-2 mb-2 justify-center">
-                {formData.skills.map((skill) => (
+                {(formData.skills ?? []).map((skill) => (
                   <Badge key={skill} variant="secondary" className="px-3 py-1">
                     {skill}
                     <button type="button" onClick={() => removeSkill(skill)} className="ml-2 hover:text-destructive">
@@ -154,7 +134,7 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2 justify-center">
-                {POPULAR_SKILLS.filter((skill) => !formData.skills.includes(skill)).map((skill) => (
+                {POPULAR_SKILLS.filter((skill) => !formData.skills?.includes(skill)).map((skill) => (
                   <Button
                     key={skill}
                     type="button"
@@ -177,7 +157,7 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
                   <Button
                     key={stack}
                     type="button"
-                    variant={formData.techStacks.includes(stack) ? "default" : "outline"}
+                    variant={(formData.techStacks ?? []).includes(stack) ? "default" : "outline"}
                     size="sm"
                     onClick={() => toggleTechStack(stack)}
                     className="justify-center"
@@ -192,7 +172,7 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
             <div className="space-y-3">
               <Label className="text-base font-medium">Your Interests</Label>
               <div className="flex flex-wrap gap-2 mb-2 justify-center">
-                {formData.interests.map((interest) => (
+                {(formData.interests ?? []).map((interest) => (
                   <Badge key={interest} variant="secondary" className="px-3 py-1">
                     {interest}
                     <button
@@ -222,7 +202,7 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2 justify-center">
-                {POPULAR_INTERESTS.filter((interest) => !formData.interests.includes(interest)).map((interest) => (
+                {POPULAR_INTERESTS.filter((interest) => !formData.interests?.includes(interest)).map((interest) => (
                   <Button
                     key={interest}
                     type="button"
@@ -241,19 +221,29 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
             <div className="space-y-3">
               <Label className="text-base font-medium">Time Commitment</Label>
               <Select
-                value={formData.timeCommitment}
-                onValueChange={(value) => setFormData((prev) => ({ ...prev, timeCommitment: value }))}
+                value={formData.timeCommitment ?? undefined}
+                onValueChange={(value) => setFormData((prev) => ({ ...prev, timeCommitment: value as "evenings" | "part-time" | "full-time" | "weekends" }))}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="How much time can you dedicate?" />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="evenings">Evenings (5-10 hours/week)</SelectItem>
                   <SelectItem value="part-time">Part-time (10-20 hours/week)</SelectItem>
                   <SelectItem value="full-time">Full-time (40+ hours/week)</SelectItem>
-                  <SelectItem value="weekend">Weekends only</SelectItem>
-                  <SelectItem value="evenings">Evenings (5-10 hours/week)</SelectItem>
+                  <SelectItem value="weekends">Weekends only</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Project Description */}
+            <div className="space-y-3">
+              <Label className="text-base font-medium">Project Description</Label>
+              <Input
+                placeholder="What is your project about?"
+                value={formData.description ?? ""}
+                onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+              />
             </div>
 
             {/* Target Audience */}
@@ -261,7 +251,7 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
               <Label className="text-base font-medium">Target Audience</Label>
               <Input
                 placeholder="Who do you want to help? (e.g., small business owners, developers, students)"
-                value={formData.targetAudience}
+                value={formData.targetAudience ?? ""}
                 onChange={(e) => setFormData((prev) => ({ ...prev, targetAudience: e.target.value }))}
               />
             </div>
@@ -270,7 +260,7 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
             <div className="space-y-3">
               <Label className="text-base font-medium">Revenue Goal</Label>
               <Select
-                value={formData.revenueGoal}
+                value={formData.revenueGoal ?? undefined}
                 onValueChange={(value) => setFormData((prev) => ({ ...prev, revenueGoal: value }))}
               >
                 <SelectTrigger>
@@ -287,7 +277,7 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
             </div>
 
             <Button type="submit" size="lg" className="w-full">
-              Generate Ideas
+              Save & Generate Ideas
             </Button>
           </form>
         </CardContent>

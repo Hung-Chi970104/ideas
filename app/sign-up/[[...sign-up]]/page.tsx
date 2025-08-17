@@ -1,4 +1,4 @@
-import { LoginBrand } from "@/components/login-brand"
+import { LoginBrand } from "@/components/login/login-brand"
 import { SignIn } from "@clerk/nextjs"
 
 export default function LoginPage() {

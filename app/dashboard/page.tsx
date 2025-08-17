@@ -1,31 +1,36 @@
 "use client"
 
 import { use, useState } from "react"
-import { IntakeForm, type IntakeFormData } from "@/components/intake-form"
-import { IdeaList } from "@/components/idea-list"
+import { IntakeForm, type IntakeFormData } from "@/components/dashboard/intake-form"
+import { IdeaList } from "@/components/ideas/idea-list"
 import { mockIdeas } from "@/lib/mock"
 import type { MockIdea } from "@/lib/mock"
 
-import { useAction } from "convex/react"
+import { useAction, useMutation, useQueries, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { Navbar } from "@/components/navbar"
+import { getDashboard } from "@/convex/dashboards"
+import { ClerkLoaded, useAuth } from "@clerk/nextjs"
 
 
 export default function DashboardPage() {
+
   const [generatedIdeas, setGeneratedIdeas] = useState<MockIdea[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
 
   const callGemini = useAction(api.ai.callGemini);
   const runAI = async (formData: IntakeFormData) => {
-  return await callGemini({formData});
+    return await callGemini({ formData });
   };
 
-  // TODO: Replace with actual AI-powered idea generation
+  const upsertDashboard = useMutation(api.dashboards.upsertDashboard)
+
   const handleGenerateIdeas = async (formData: IntakeFormData) => {
     setIsGenerating(true)
 
-    const result = await runAI(formData)
-    console.log(result)
+    upsertDashboard({ formData })
+    // const result = await runAI(formData)
+    // console.log(result)
 
     // For now, return filtered mock ideas based on form data
     // TODO: Implement actual AI generation with user preferences
@@ -46,8 +51,9 @@ export default function DashboardPage() {
               Tell us about your skills and interests to get personalized startup ideas
             </p>
           </div>
-
-          <IntakeForm onGenerateIdeas={handleGenerateIdeas} />
+          <ClerkLoaded>
+            <IntakeForm onGenerateIdeas={handleGenerateIdeas} />
+          </ClerkLoaded>
 
           {isGenerating && (
             <div className="text-center py-12">

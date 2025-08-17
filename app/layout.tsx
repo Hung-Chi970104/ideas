@@ -31,18 +31,18 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <ConvexClientProvider>
-      <html lang="en" className={`dark ${inter.variable} ${spaceGrotesk.variable}`}>
-        <head>
-          <style>{`
+        <html lang="en" className={`dark ${inter.variable} ${spaceGrotesk.variable}`}>
+          <head>
+            <style>{`
 html {
   font-family: ${inter.style.fontFamily};
   --font-sans: ${inter.variable};
   --font-heading: ${spaceGrotesk.variable};
 }
         `}</style>
-        </head>
-        <body className="grid-bg">{children}</body>
-      </html>
+          </head>
+          <body className="grid-bg">{children}</body>
+        </html>
       </ConvexClientProvider>
     </ClerkProvider>
   )

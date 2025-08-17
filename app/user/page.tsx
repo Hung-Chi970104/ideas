@@ -1,8 +1,8 @@
-import { UserProfile } from "@/components/user-profile"
-import { UserStats } from "@/components/user-stats"
-import { SavedIdeas } from "@/components/saved-ideas"
-import { RecentActivity } from "@/components/recent-activity"
-import { AccountSettings } from "@/components/account-settings"
+import { UserProfile } from "@/components/user/user-profile"
+import { UserStats } from "@/components/user/user-stats"
+import { SavedIdeas } from "@/components/user/saved-ideas"
+import { RecentActivity } from "@/components/user/recent-activity"
+import { AccountSettings } from "@/components/user/account-settings"
 
 export default function UserDashboardPage() {
   return (
