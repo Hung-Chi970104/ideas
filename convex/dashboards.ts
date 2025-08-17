@@ -1,8 +1,9 @@
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { Dashboard } from "./schema";
 import { getCurrentUserOrThrow } from "./users";
 
+// Get form data
 export const getDashboard = query({
   handler: async (ctx) => {
     const user = await getCurrentUserOrThrow(ctx)
@@ -16,6 +17,7 @@ export const getDashboard = query({
   },
 });
 
+// Upsert (Update or Insert)
 export const upsertDashboard = mutation({
   args: { formData: v.object(Dashboard) },
   handler: async (ctx, { formData }) => {
@@ -33,5 +35,23 @@ export const upsertDashboard = mutation({
         ...formData
       });
     }
+  },
+});
+
+// Delete dashboard
+export const deleteDashboard = internalMutation({
+  args: {
+    userId: v.id("users")
+  },
+  handler: async (ctx, {userId}) => {
+    const existing = await ctx.db
+      .query("dashboards")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .unique()
+
+    if (!existing) {
+      return { deleted: false, reason: "No dashboard for this user" };
+    }
+    await ctx.db.delete(existing._id);
   },
 });

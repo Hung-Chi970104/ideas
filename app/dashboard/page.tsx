@@ -51,6 +51,7 @@ export default function DashboardPage() {
               Tell us about your skills and interests to get personalized startup ideas
             </p>
           </div>
+          
           <ClerkLoaded>
             <IntakeForm onGenerateIdeas={handleGenerateIdeas} />
           </ClerkLoaded>
