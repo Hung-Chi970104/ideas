@@ -237,9 +237,9 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
 
             {/* Project Description */}
             <div className="space-y-3">
-              <Label className="text-base font-medium">Project Description</Label>
+              <Label className="text-base font-medium">Description</Label>
               <Input
-                placeholder="What is your project about?"
+                placeholder="Any other description about yourself or your project?"
                 value={formData.description ?? ""}
                 onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
               />

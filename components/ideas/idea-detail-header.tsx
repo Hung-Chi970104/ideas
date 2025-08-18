@@ -21,13 +21,13 @@ export function IdeaDetailHeader({ idea }: IdeaDetailHeaderProps) {
       </div>
 
       <div className="space-y-4">
-        <h1 className="text-3xl font-bold font-heading leading-tight">{idea.title}</h1>
+        <h1 className="text-3xl font-bold font-heading leading-tight">{idea.ideaTitle}</h1>
 
         <div className="flex flex-wrap gap-3">
-          <ScoreBadge label="Market Fit" score={idea.scores.fit} />
-          <ScoreBadge label="Trend" score={idea.scores.trend} />
-          <ScoreBadge label="Feasible" score={idea.scores.feasible} />
-          <ScoreBadge label="Niche" score={idea.scores.niche} />
+          <ScoreBadge label="Market Fit" score={idea.marketFit} />
+          <ScoreBadge label="Trend" score={idea.trend} />
+          <ScoreBadge label="Feasible" score={idea.difficulty} />
+          <ScoreBadge label="Niche" score={idea.niche} />
         </div>
 
         <div className="flex flex-wrap gap-2">

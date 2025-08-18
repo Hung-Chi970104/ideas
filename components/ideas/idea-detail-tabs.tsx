@@ -30,15 +30,15 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
           <CardContent className="space-y-4">
             <div>
               <h4 className="font-semibold mb-2">Target Audience</h4>
-              <p className="text-muted-foreground">{idea.who}</p>
+              <p className="text-muted-foreground">{idea.targetAudience}</p>
             </div>
             <div>
               <h4 className="font-semibold mb-2">Pain Point</h4>
-              <p className="text-muted-foreground">{idea.pain}</p>
+              <p className="text-muted-foreground">{idea.painPoint}</p>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Why Now?</h4>
-              <p className="text-muted-foreground">{idea.whyNow}</p>
+              <h4 className="font-semibold mb-2">Solution</h4>
+              <p className="text-muted-foreground">{idea.description}</p>
             </div>
           </CardContent>
         </Card>

@@ -22,7 +22,7 @@ export function IdeaDetailSidebar({ idea }: IdeaDetailSidebarProps) {
         </CardHeader>
         <CardContent>
           <Button asChild size="lg" className="w-full">
-            <Link href={`/roadmap/${idea.id}`}>Create Roadmap</Link>
+            <Link href={`/roadmap/${idea._id}`}>Create Roadmap</Link>
           </Button>
         </CardContent>
       </Card>
