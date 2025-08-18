@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { ClerkProvider } from '@clerk/nextjs'
+import { ClerkLoaded, ClerkProvider } from '@clerk/nextjs'
 import { Inter, Space_Grotesk } from "next/font/google"
 import "./globals.css"
 import ConvexClientProvider from "@/components/ConvexProviderWithClerk"
@@ -31,6 +31,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <ConvexClientProvider>
+        
         <html lang="en" className={`dark ${inter.variable} ${spaceGrotesk.variable}`}>
           <head>
             <style>{`
@@ -41,7 +42,11 @@ html {
 }
         `}</style>
           </head>
-          <body className="grid-bg">{children}</body>
+         
+          <body className="grid-bg">
+             <ClerkLoaded>
+            {children}
+            </ClerkLoaded></body>
         </html>
       </ConvexClientProvider>
     </ClerkProvider>

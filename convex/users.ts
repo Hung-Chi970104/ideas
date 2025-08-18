@@ -52,6 +52,7 @@ export const deleteFromClerk = internalMutation({
 
     if (user !== null) {
       await ctx.runMutation(internal.dashboards.deleteDashboard, {userId: user._id})
+      await ctx.runMutation(internal.ideas.deleteIdeas, {userId: user._id})
       await ctx.db.delete(user._id)
       
     } else {

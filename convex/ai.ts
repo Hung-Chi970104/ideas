@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { action } from "./_generated/server";
 import { GoogleGenAI, Type } from "@google/genai";
 import { Dashboard } from "./schema";
+import { internal } from "./_generated/api";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -9,33 +10,23 @@ export const callGemini = action({
   args: {
     formData: v.object(Dashboard)
   },
-  handler: async (_, args) => {
+  handler: async (ctx, args) => {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: `
-You are an expert product analyst. 
-Your job is to generate and evaluate **highly niche project ideas** based on the user's profile.  
+You are Spark, an expert product analyst that ONLY generates highly niche, career-impactful project ideas.  
 
-CRITERIA:
-- Avoid generic or overused ideas such as: task managers, chat apps, dating apps, e-commerce stores, or blogging platforms.
-- Each idea must target a very specific audience, industry, or use-case. (e.g. "AI tool for indie game pixel artists" instead of "AI tool for designers.")
-- Only suggest problems that are underserved or have no widely adopted solution.
-- Before finalizing each idea, briefly justify why it is not already mainstream.
+Rules:  
+1. No CRUD/chat/dating/e-commerce/blog projects. Reject and regenerate if too generic.  
+2. Each idea must target a very specific audience or use-case, not a broad group.  
+3. Each idea must show resume signals: what advanced skills this project proves, plus 1–2 STAR-style resume bullets with measurable impact (e.g., % improvement, latency, throughput).  
+4. Ideas must be completable in 2–8 weeks by 1–2 developers, with MVP + stretch scope and one hard technical challenge.  
+5. Each idea must include a brief justification for why it is not already mainstream.  
+6. Output must be specific, structured, and actionable (specs, not vague advice).  
+7. Regenerate if any rule is not satisfied.  
 
-USER DATA:
+USER DATA:  
 ${JSON.stringify(args.formData, null, 2)}
-
-Field meanings:
-- ideaTitle: Provide a brief title for this idea.
-- description: Provide a description about what this product does. 
-- targetAudience: Provide a description about who is the potential audience.
-- painPoint: Explain what issues many people have encountered and how this project can help to solve them.
-- marketFit: Evaluate and choose the market demand and how well the idea matches that demand ("High", "Med", "Low").
-- trend: Rate how well the idea aligns with current technology and market trends ("High", "Med", "Low").
-- difficulty: Rate how difficult the idea is given common resources, skills, and time ("High", "Med", "Low").
-- niche: Rate how unique and specific the target market is ("High", "Med", "Low").
-- techStack: List of core technologies, frameworks, or APIs needed for implementation.
-- durationWeek: Estimate the number of weeks this project is going to take
 `,
       config: {
         responseMimeType: "application/json",
@@ -80,6 +71,9 @@ Field meanings:
               },
               durationWeek: {
                 type: Type.NUMBER
+              },
+              justification: {
+                type: Type.STRING
               }
             },
             propertyOrdering: [
@@ -92,13 +86,18 @@ Field meanings:
               "difficulty",
               "niche",
               "techStack",
-              "durationWeek"
+              "durationWeek",
+              "justification"
             ],
           },
         },
       },
     });
 
-    return JSON.parse(response.text ?? "[]");
+    const results =  JSON.parse(response.text ?? "[]");
+    for (const result of results){
+      await ctx.runMutation(internal.ideas.insertIdeas, {idea: result})
+    }
+    return "Success"
   },
 });

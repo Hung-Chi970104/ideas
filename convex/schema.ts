@@ -42,7 +42,8 @@ export const Idea = {
   difficulty: Tier,
   niche: Tier,
   techStack: v.array(v.string()),
-  durationWeek: v.number()
+  durationWeek: v.number(),
+  justification: v.string()
 }
 
 export default defineSchema({
@@ -59,5 +60,5 @@ export default defineSchema({
   ideas: defineTable({
     userId: v.id("users"),
     ...Idea
-  })
+  }).index('by_userId', ['userId'])
 })

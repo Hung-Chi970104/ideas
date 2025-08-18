@@ -20,9 +20,16 @@ export function Navbar() {
             Pricing
           </Link>
 
+          <Link
+            href="/dashboard"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Dashboard
+          </Link>
+
           <SignedOut>
             <SignInButton>
-              <Button variant="outline" size="sm">
+              <Button className="cursor-pointer" variant="outline" size="sm">
                 Sign In
               </Button>
             </SignInButton>

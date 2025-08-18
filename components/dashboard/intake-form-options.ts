@@ -20,10 +20,11 @@ const TECH_STACKS = [
   "Python",
   "Django",
   "Flask",
+  "FastAPI",
   "PostgreSQL",
   "MongoDB",
   "AWS",
-  "Vercel",
+  
 ]
 
 const POPULAR_INTERESTS = [

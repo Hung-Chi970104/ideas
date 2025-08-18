@@ -1,19 +1,30 @@
-import { internalMutation, mutation, query } from "./_generated/server";
+import { internalMutation, internalQuery, mutation, query, QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { Dashboard } from "./schema";
 import { getCurrentUserOrThrow } from "./users";
+import { Id } from "./_generated/dataModel";
 
-// Get form data
-export const getDashboard = query({
+async function getDashboard(ctx: QueryCtx, userId: Id<"users">) {
+    return await ctx.db
+      .query("dashboards")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .unique()
+}
+
+// Get form data (from clients)
+export const getDashboardForUser = query({
   handler: async (ctx) => {
     const user = await getCurrentUserOrThrow(ctx)
     if (!user) return null
-    const dashboard = await ctx.db
-      .query("dashboards")
-      .withIndex("by_userId", (q) => q.eq("userId", user._id))
-      .unique()
+    return getDashboard(ctx, user._id)
+  },
+});
 
-    return dashboard
+// Get form data (from server)
+export const getDashboardForServer = internalQuery({
+  args: {userId: v.id("users")},
+  handler: async (ctx, {userId}) => {
+    return getDashboard(ctx, userId)
   },
 });
 

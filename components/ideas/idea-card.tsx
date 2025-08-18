@@ -10,24 +10,24 @@ interface IdeaCardProps {
 
 export function IdeaCard({ idea }: IdeaCardProps) {
   return (
-    <Card className="border-border/50 bg-card/50 backdrop-blur hover:bg-card/70 transition-colors">
+    <Card className="h-full flex flex-col border-border/50 bg-card/50 backdrop-blur hover:bg-card/70 transition-colors">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-heading leading-tight">{idea.title}</CardTitle>
-        <CardDescription className="text-sm">
-          <span className="font-medium">Who:</span> {idea.who}
+        <CardTitle className="text-lg font-heading leading-tight">{idea.ideaTitle}</CardTitle>
+        <CardDescription className="text-sm line-clamp-4">
+          <span className="font-medium">Who:</span> {idea.targetAudience}
         </CardDescription>
-        <CardDescription className="text-sm">
-          <span className="font-medium">Pain:</span> {idea.pain}
+        <CardDescription className="text-sm line-clamp-4">
+          <span className="font-medium">Pain:</span> {idea.painPoint}
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="mt-auto space-y-4">
         {/* Score badges */}
         <div className="flex flex-wrap gap-2">
-          <ScoreBadge label="Fit" score={idea.scores.fit} />
-          <ScoreBadge label="Trend" score={idea.scores.trend} />
-          <ScoreBadge label="Feasible" score={idea.scores.feasible} />
-          <ScoreBadge label="Niche" score={idea.scores.niche} />
+          <ScoreBadge label="Fit" score={idea.marketFit} />
+          <ScoreBadge label="Trend" score={idea.trend} />
+          <ScoreBadge label="Difficulty" score={idea.difficulty} />
+          <ScoreBadge label="Niche" score={idea.niche} />
         </div>
 
         {/* Tech stack */}
@@ -47,10 +47,10 @@ export function IdeaCard({ idea }: IdeaCardProps) {
         {/* Action buttons */}
         <div className="flex gap-2 pt-2">
           <Button asChild variant="outline" size="sm" className="flex-1 bg-transparent">
-            <Link href={`/ideas/${idea.id}`}>View details</Link>
+            <Link href={`/ideas/${idea._id}`}>View details</Link>
           </Button>
           <Button asChild size="sm" className="flex-1">
-            <Link href={`/roadmap/${idea.id}`}>Create roadmap</Link>
+            <Link href={`/roadmap/${idea._id}`}>Create roadmap</Link>
           </Button>
         </div>
       </CardContent>

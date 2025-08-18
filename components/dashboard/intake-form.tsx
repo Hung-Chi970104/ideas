@@ -14,7 +14,6 @@ import { POPULAR_SKILLS, POPULAR_INTERESTS, TECH_STACKS } from "@/components/das
 import { Doc } from "@/convex/_generated/dataModel"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
-import { useAuth } from "@clerk/nextjs"
 
 export type IntakeFormData = Omit<Doc<"dashboards">, "_id" | "_creationTime" | "userId">
 
@@ -35,7 +34,7 @@ interface IntakeFormProps {
 // Where the page is rendered
 export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
 
-  const dashboard = useQuery(api.dashboards.getDashboard)
+  const dashboard = useQuery(api.dashboards.getDashboardForUser)
 
   const [formData, setFormData] = useState<IntakeFormData>(DEFAULT_FORM)
 
