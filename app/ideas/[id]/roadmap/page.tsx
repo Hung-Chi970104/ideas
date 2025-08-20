@@ -1,16 +1,22 @@
 import { notFound } from "next/navigation"
-import { mockIdeas, mockRoadmap } from "@/lib/mock"
 import { RoadmapHeader } from "@/components/roadmap/roadmap-header"
 import { RoadmapTimeline } from "@/components/roadmap/roadmap-timeline"
+import { auth } from "@clerk/nextjs/server";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@/convex/_generated/api";
 
 export default async function RoadmapPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const idea = mockIdeas.find((idea) => idea.id === id)
-  const roadmap = mockRoadmap(id)
+  const { userId } = await auth();
+  if (!userId) notFound()
 
-  if (!idea) {
-    notFound()
-  }
+  const { id } = await params
+
+  const ideas = await fetchQuery(api.ideas.getIdeasForServer, {userId})
+  const idea = ideas?.find((idea) => idea._id === id)
+  if (!idea) notFound()
+
+  const roadmap = await fetchQuery(api.roadmaps.getRoadmapForUser, {ideaId: idea._id})
+
 
   return (
     <div className="min-h-screen bg-background">

@@ -4,11 +4,11 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import type { MockRoadmap, RoadmapWeek } from "@/lib/mock"
 import { CheckCircle, Circle, ExternalLink, Flag } from "lucide-react"
+import { Doc } from "@/convex/_generated/dataModel"
 
 interface RoadmapTimelineProps {
-  roadmap: MockRoadmap
+  roadmap: Doc<"roadmapWeeks">[]
 }
 
 export function RoadmapTimeline({ roadmap }: RoadmapTimelineProps) {
@@ -40,20 +40,20 @@ export function RoadmapTimeline({ roadmap }: RoadmapTimelineProps) {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold font-heading">Launch Timeline</h2>
         <div className="text-sm text-muted-foreground">
-          {completedWeeks.size} of {roadmap.weeks.length} weeks completed
+          {completedWeeks.size} of {roadmap.length} weeks completed
         </div>
       </div>
 
       <div className="space-y-6">
-        {roadmap.weeks.map((week, index) => (
+        {roadmap.map((week, index) => (
           <WeekCard
-            key={week.week}
+            key={week.weekOrder}
             week={week}
-            isCompleted={completedWeeks.has(week.week)}
+            isCompleted={completedWeeks.has(week.weekOrder)}
             completedTasks={completedTasks}
-            onToggleWeek={() => toggleWeekComplete(week.week)}
+            onToggleWeek={() => toggleWeekComplete(week.weekOrder)}
             onToggleTask={toggleTaskComplete}
-            isLast={index === roadmap.weeks.length - 1}
+            isLast={index === roadmap.length - 1}
           />
         ))}
       </div>
@@ -62,7 +62,7 @@ export function RoadmapTimeline({ roadmap }: RoadmapTimelineProps) {
 }
 
 interface WeekCardProps {
-  week: RoadmapWeek
+  week: Doc<"roadmapWeeks">
   isCompleted: boolean
   completedTasks: Set<string>
   onToggleWeek: () => void
@@ -71,7 +71,7 @@ interface WeekCardProps {
 }
 
 function WeekCard({ week, isCompleted, completedTasks, onToggleWeek, onToggleTask, isLast }: WeekCardProps) {
-  const taskIds = week.tasks.map((task, index) => `week-${week.week}-task-${index}`)
+  const taskIds = week.tasks.map((task, index) => `week-${week.weekOrder}-task-${index}`)
   const completedTaskCount = taskIds.filter((id) => completedTasks.has(id)).length
   const progressPercentage = (completedTaskCount / week.tasks.length) * 100
 
@@ -90,12 +90,12 @@ function WeekCard({ week, isCompleted, completedTasks, onToggleWeek, onToggleTas
                 {isCompleted ? (
                   <CheckCircle className="w-6 h-6 text-green-500" />
                 ) : (
-                  <span className="text-lg font-bold font-heading">{week.week}</span>
+                  <span className="text-lg font-bold font-heading">{week.weekOrder}</span>
                 )}
               </div>
               <div className="space-y-2">
                 <CardTitle className="text-xl font-heading">{week.goal}</CardTitle>
-                <CardDescription>Week {week.week} of 6</CardDescription>
+                <CardDescription>Week {week.weekOrder} of 6</CardDescription>
                 <div className="flex items-center gap-2">
                   <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
                     <div
@@ -129,7 +129,7 @@ function WeekCard({ week, isCompleted, completedTasks, onToggleWeek, onToggleTas
             </h4>
             <div className="space-y-2 ml-6">
               {week.tasks.map((task, index) => {
-                const taskId = `week-${week.week}-task-${index}`
+                const taskId = `week-${week.weekOrder}-task-${index}`
                 const isTaskCompleted = completedTasks.has(taskId)
                 return (
                   <div key={index} className="flex items-start gap-3">
@@ -154,7 +154,7 @@ function WeekCard({ week, isCompleted, completedTasks, onToggleWeek, onToggleTas
               Acceptance Criteria
             </h4>
             <div className="space-y-2 ml-6">
-              {week.acceptance.map((criteria, index) => (
+              {week.acceptanceCriteria.map((criteria, index) => (
                 <div key={index} className="flex items-start gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-2" />
                   <span className="text-sm text-muted-foreground">{criteria}</span>

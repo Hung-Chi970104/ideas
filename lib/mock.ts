@@ -13,8 +13,6 @@ export interface Citation {
   snippet: string
 }
 
-export type MockIdea = Doc<"ideas">
-
 
 export interface RoadmapWeek {
   week: number

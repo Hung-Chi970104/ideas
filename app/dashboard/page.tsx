@@ -1,27 +1,29 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { IntakeForm, type IntakeFormData } from "@/components/dashboard/intake-form"
 import { IdeaList } from "@/components/ideas/idea-list"
-import type { MockIdea } from "@/lib/mock"
 
 import { useAction, useMutation, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { Navbar } from "@/components/Navbar"
-import { ClerkLoaded, SignedIn, useAuth } from "@clerk/nextjs"
+import { ClerkLoaded, SignedIn } from "@clerk/nextjs"
+import { Doc } from "@/convex/_generated/dataModel"
 
 
 export default function DashboardPage() {
 
-  const [generatedIdeas, setGeneratedIdeas] = useState<MockIdea[]>([])
+  const [generatedIdeas, setGeneratedIdeas] = useState<Doc<"ideas">[]>([])
   const [isGenerating, setIsGenerating] = useState(false)
 
-  const callGemini = useAction(api.ai.callGemini);
-  const runAI = async (formData: IntakeFormData) => {
-    return await callGemini({ formData });
+  const callGeminiForIdeas = useAction(api.ai.callGeminiForIdeas);
+  const runAIForIdeas = async (formData: IntakeFormData) => {
+    return await callGeminiForIdeas({ formData });
   };
 
   const upsertDashboard = useMutation(api.dashboards.upsertDashboard)
+  const updateDashboardStatus = useMutation(api.dashboards.updateDashboardStatus)
+  const dashboard = useQuery(api.dashboards.getDashboardForUser)
 
   const ideas = useQuery(api.ideas.getIdeasForUser);
 
@@ -34,16 +36,30 @@ export default function DashboardPage() {
 
   }, [ideas])
 
+  useEffect(() => {
+    setIsGenerating(dashboard?.isGeneratingIdea ?? false)
+  }, [dashboard])
+
   // Actual Function
   const handleGenerateIdeas = async (formData: IntakeFormData) => {
-    setIsGenerating(true)
+    upsertDashboard({
+      formData: formData,
+      isGeneratingIdea: true,
+      isGeneratingRoadmap: dashboard?.isGeneratingRoadmap ?? false
+    })
+    updateDashboardStatus({ isGeneratingIdea: true })
+    const result = await runAIForIdeas(formData)
+    console.log(result)
 
-    upsertDashboard({ formData })
-    await runAI(formData)
+    updateDashboardStatus({ isGeneratingIdea: false })
+  }
 
-    const filteredIdeas = (ideas??[]).slice(0, 8) // Show first 8 ideas
-    setGeneratedIdeas(filteredIdeas)
-    setIsGenerating(false)
+  const handleSaveDashboard = async (formData: IntakeFormData) => {
+    upsertDashboard({
+      formData: formData,
+      isGeneratingIdea: dashboard?.isGeneratingIdea ?? false,
+      isGeneratingRoadmap: dashboard?.isGeneratingIdea ?? false
+    })
   }
 
   return (
@@ -60,7 +76,7 @@ export default function DashboardPage() {
             </div>
 
             <SignedIn>
-              <IntakeForm onGenerateIdeas={handleGenerateIdeas} />
+              <IntakeForm onGenerateIdeas={handleGenerateIdeas} saveFormData={handleSaveDashboard} />
             </SignedIn>
 
 

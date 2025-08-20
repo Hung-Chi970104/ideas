@@ -30,8 +30,12 @@ export const getDashboardForServer = internalQuery({
 
 // Upsert (Update or Insert)
 export const upsertDashboard = mutation({
-  args: { formData: v.object(Dashboard) },
-  handler: async (ctx, { formData }) => {
+  args: { 
+    formData: v.object(Dashboard),
+    isGeneratingIdea: v.boolean(),
+    isGeneratingRoadmap: v.boolean()
+   },
+  handler: async (ctx, { formData, isGeneratingIdea, isGeneratingRoadmap}) => {
     const user = await getCurrentUserOrThrow(ctx)
     const existing = await ctx.db
       .query("dashboards")
@@ -43,8 +47,29 @@ export const upsertDashboard = mutation({
     } else {
       await ctx.db.insert("dashboards", {
         userId: user._id,
+        isGeneratingIdea: isGeneratingIdea,
+        isGeneratingRoadmap: isGeneratingRoadmap,
         ...formData
       });
+    }
+  },
+});
+
+export const updateDashboardStatus = mutation({
+  args: { 
+    isGeneratingIdea: v.boolean()
+   },
+  handler: async (ctx, { isGeneratingIdea }) => {
+    const user = await getCurrentUserOrThrow(ctx)
+    const existing = await ctx.db
+      .query("dashboards")
+      .withIndex("by_userId", (q) => q.eq("userId", user._id))
+      .unique()
+
+    if (existing) {
+      await ctx.db.patch(existing._id, { isGeneratingIdea: isGeneratingIdea });
+    } else {
+      return "Can't find dashboard"
     }
   },
 });

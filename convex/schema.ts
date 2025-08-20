@@ -30,6 +30,7 @@ export const Dashboard = {
   description: v.optional(v.string()),
   targetAudience: v.optional(v.string()),
   revenueGoal: v.optional(v.string()),
+
 }
 
 export const Idea = {
@@ -41,10 +42,40 @@ export const Idea = {
   trend: Tier,
   difficulty: Tier,
   niche: Tier,
-  techStack: v.array(v.string()),
+  techStack: v.object({
+    frontend: v.array(v.string()),
+    backend: v.array(v.string()),
+    database: v.array(v.string()),
+    hosting: v.array(v.string())
+  }
+  ),
   durationWeek: v.number(),
-  justification: v.string()
+  justification: v.string(),
+  minimalViableProduct: v.optional(v.string()),
+  essentialFeatures: v.optional(
+    v.array(
+      v.object({
+        featureTitle: v.string(),
+        featureDescription: v.string(),
+      })
+    )
+  ),
+  keyWords: v.optional(
+    v.array(
+      v.string()
+    )
+  )
 }
+
+export const RoadmapWeek = {
+  weekOrder: v.number(),
+  goal: v.string(),
+  tasks: v.array(v.string()),
+  acceptanceCriteria: v.array(v.string()),
+  links: v.array(v.string()),
+  ship: v.string()
+}
+
 
 export default defineSchema({
   users: defineTable(User)
@@ -53,12 +84,22 @@ export default defineSchema({
 
   dashboards: defineTable({
     userId: v.id("users"),
+    isGeneratingIdea: v.boolean(),
+    isGeneratingRoadmap: v.boolean(),
     ...Dashboard
-  }).index('by_userId', ['userId'])
-  ,
+  }).index('by_userId', ['userId']),
 
   ideas: defineTable({
     userId: v.id("users"),
+
     ...Idea
+  }).index('by_userId', ['userId']),
+
+  roadmapWeeks: defineTable({
+    userId: v.id("users"),
+    ideaId: v.id("ideas"),
+    ...RoadmapWeek
   }).index('by_userId', ['userId'])
+    .index('by_ideaId', ['ideaId']),
+
 })

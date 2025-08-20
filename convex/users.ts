@@ -77,7 +77,7 @@ export async function getCurrentUser(ctx: QueryCtx) {
   return await userByClerkUserId(ctx, identity.subject)
 }
 
-async function userByClerkUserId(ctx: QueryCtx, clerkUserId: string) {
+export async function userByClerkUserId(ctx: QueryCtx, clerkUserId: string) {
   return await ctx.db
     .query('users')
     .withIndex('byClerkUserId', q => q.eq('clerkUserId', clerkUserId))

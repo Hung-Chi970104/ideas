@@ -24,15 +24,18 @@ const DEFAULT_FORM: IntakeFormData = {
   timeCommitment: undefined,
   description: "",
   targetAudience: "",
-  revenueGoal: undefined
+  revenueGoal: undefined,
+  isGeneratingIdea: false,
+  isGeneratingRoadmap: false
 }
 
 interface IntakeFormProps {
   onGenerateIdeas: (formData: IntakeFormData) => void
+  saveFormData: (formData: IntakeFormData) => void
 }
 
 // Where the page is rendered
-export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
+export function IntakeForm({ onGenerateIdeas, saveFormData }: IntakeFormProps) {
 
   const dashboard = useQuery(api.dashboards.getDashboardForUser)
 
@@ -274,10 +277,24 @@ export function IntakeForm({ onGenerateIdeas }: IntakeFormProps) {
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex gap-4">
+              <Button
+              type="button"
+              size="lg"
+              className="flex-1 cursor-pointer"
+              onClick={()=> saveFormData(formData)}
+              >
+                Save
+              </Button>
 
-            <Button type="submit" size="lg" className="w-full">
-              Save & Generate Ideas
-            </Button>
+              <Button
+                type="submit"
+                size="lg"
+                className="flex-1 cursor-pointer"
+                >
+                Generate Ideas
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>

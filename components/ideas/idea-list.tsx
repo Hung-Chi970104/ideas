@@ -1,8 +1,8 @@
+import { Doc } from "@/convex/_generated/dataModel"
 import { IdeaCard } from "./idea-card"
-import type { MockIdea } from "@/lib/mock"
 
 interface IdeaListProps {
-  ideas: MockIdea[]
+  ideas: Doc<"ideas">[]
 }
 
 export function IdeaList({ ideas }: IdeaListProps) {

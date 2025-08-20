@@ -1,5 +1,6 @@
 import { internalMutation, internalQuery, mutation, query, QueryCtx } from "./_generated/server";
 import { v } from "convex/values";
+import {userByClerkUserId} from "./users"
 import { Dashboard, Idea } from "./schema";
 import { getCurrentUserOrThrow } from "./users";
 import { Id } from "./_generated/dataModel";
@@ -21,10 +22,19 @@ export const getIdeasForUser = query({
 });
 
 // Get form data (from server)
-export const getIdeasForServer = internalQuery({
-  args: { userId: v.id("users") },
+export const getIdeasForServer = query({
+  args: { userId: v.string() },
   handler: async (ctx, { userId }) => {
-    return getIdeas(ctx, userId)
+    const user = await userByClerkUserId(ctx, userId)
+    if (!user) return []
+    return getIdeas(ctx, user._id)
+  },
+});
+
+export const getIdeaById = internalQuery({
+  args: { ideaId: v.id("ideas") },
+  handler: async (ctx, { ideaId }) => {
+    return await ctx.db.get(ideaId)
   },
 });
 
@@ -41,7 +51,7 @@ export const insertIdeas = internalMutation({
   },
 });
 
-// Delete dashboard
+// Delete Ideas
 export const deleteIdeas = internalMutation({
   args: {
     userId: v.id("users")

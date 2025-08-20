@@ -1,11 +1,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import type { MockIdea } from "@/lib/mock"
 import { ExternalLink, TrendingUp, AlertTriangle, Zap, Code } from "lucide-react"
+import { Doc } from "@/convex/_generated/dataModel"
 
 interface IdeaDetailTabsProps {
-  idea: MockIdea
+  idea: Doc<"ideas">
 }
 
 export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
@@ -37,7 +37,11 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
               <p className="text-muted-foreground">{idea.painPoint}</p>
             </div>
             <div>
-              <h4 className="font-semibold mb-2">Solution</h4>
+              <h4 className="font-semibold mb-2">Why Now?</h4>
+              <p className="text-muted-foreground">{idea.justification}</p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-2">Project Solution</h4>
               <p className="text-muted-foreground">{idea.description}</p>
             </div>
           </CardContent>
@@ -54,7 +58,7 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
             <CardDescription>Research and data supporting this opportunity</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {idea.citations.map((citation, index) => (
+            {/* {idea.citations.map((citation, index) => (
               <div key={index} className="border rounded-lg p-4 space-y-2">
                 <h4 className="font-semibold">{citation.title}</h4>
                 <p className="text-sm text-muted-foreground">{citation.snippet}</p>
@@ -67,7 +71,7 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
                   View source <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
-            ))}
+            ))} */}
 
             <div className="mt-6 p-4 bg-muted/50 rounded-lg">
               <h4 className="font-semibold mb-2">Additional Validation Needed</h4>
@@ -149,44 +153,25 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
           <CardContent className="space-y-4">
             <div className="p-4 bg-gradient-to-r from-orange-500/10 to-pink-500/10 rounded-lg border border-orange-500/20">
               <h4 className="font-semibold mb-2">Core MVP Scope</h4>
-              <p className="text-muted-foreground">{idea.tinyScope}</p>
+              <p className="text-muted-foreground">{idea.minimalViableProduct}</p>
             </div>
 
             <div className="space-y-4">
               <h4 className="font-semibold">Essential Features</h4>
               <div className="grid gap-3">
-                <div className="flex items-start gap-3 p-3 border rounded-lg">
-                  <div className="w-2 h-2 rounded-full bg-green-500 mt-2" />
-                  <div>
-                    <h5 className="font-medium">User Authentication</h5>
-                    <p className="text-sm text-muted-foreground">Basic sign-up and login functionality</p>
+                {idea.essentialFeatures?.map((feature) => (
+                  <div key={feature.featureTitle} className="flex items-start gap-3 p-3 border rounded-lg">
+                    <div className="w-2 h-2 rounded-full bg-green-500 mt-2" />
+                    <div>
+                      <h5 className="font-medium">{feature.featureTitle}</h5>
+                      <p className="text-sm text-muted-foreground">{feature.featureDescription}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 border rounded-lg">
-                  <div className="w-2 h-2 rounded-full bg-green-500 mt-2" />
-                  <div>
-                    <h5 className="font-medium">Core Feature</h5>
-                    <p className="text-sm text-muted-foreground">Main value proposition in simplest form</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 border rounded-lg">
-                  <div className="w-2 h-2 rounded-full bg-green-500 mt-2" />
-                  <div>
-                    <h5 className="font-medium">Basic Dashboard</h5>
-                    <p className="text-sm text-muted-foreground">Simple interface to access main functionality</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 p-3 border rounded-lg">
-                  <div className="w-2 h-2 rounded-full bg-green-500 mt-2" />
-                  <div>
-                    <h5 className="font-medium">Payment Integration</h5>
-                    <p className="text-sm text-muted-foreground">Basic subscription or one-time payment</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <h4 className="font-semibold">Features to Skip (v1)</h4>
               <div className="grid gap-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -206,7 +191,7 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
                   Advanced customization options
                 </div>
               </div>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </TabsContent>
@@ -225,9 +210,7 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
               <div className="space-y-3">
                 <h4 className="font-semibold">Frontend</h4>
                 <div className="space-y-2">
-                  {idea.techStack
-                    .filter((tech) => ["Next.js", "React", "Vue.js", "Angular", "Tailwind"].includes(tech))
-                    .map((tech) => (
+                  {idea.techStack.frontend.map((tech) => (
                       <Badge key={tech} variant="secondary" className="mr-2">
                         {tech}
                       </Badge>
@@ -238,9 +221,7 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
               <div className="space-y-3">
                 <h4 className="font-semibold">Backend</h4>
                 <div className="space-y-2">
-                  {idea.techStack
-                    .filter((tech) => ["Node.js", "Python", "Django", "Flask", "Express"].includes(tech))
-                    .map((tech) => (
+                  {idea.techStack.backend.map((tech) => (
                       <Badge key={tech} variant="secondary" className="mr-2">
                         {tech}
                       </Badge>
@@ -251,9 +232,7 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
               <div className="space-y-3">
                 <h4 className="font-semibold">Database</h4>
                 <div className="space-y-2">
-                  {idea.techStack
-                    .filter((tech) => ["PostgreSQL", "MongoDB", "MySQL", "Supabase"].includes(tech))
-                    .map((tech) => (
+                  {idea.techStack.database.map((tech) => (
                       <Badge key={tech} variant="secondary" className="mr-2">
                         {tech}
                       </Badge>
@@ -264,9 +243,7 @@ export function IdeaDetailTabs({ idea }: IdeaDetailTabsProps) {
               <div className="space-y-3">
                 <h4 className="font-semibold">Hosting</h4>
                 <div className="space-y-2">
-                  {idea.techStack
-                    .filter((tech) => ["Vercel", "AWS", "Heroku", "Railway"].includes(tech))
-                    .map((tech) => (
+                  {idea.techStack.hosting.map((tech) => (
                       <Badge key={tech} variant="secondary" className="mr-2">
                         {tech}
                       </Badge>

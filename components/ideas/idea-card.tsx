@@ -1,14 +1,16 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ScoreBadge } from "@/components/score-badge"
-import type { MockIdea } from "@/lib/mock"
 import Link from "next/link"
+import { Doc } from "@/convex/_generated/dataModel"
 
 interface IdeaCardProps {
-  idea: MockIdea
+  idea: Doc<"ideas">
 }
 
 export function IdeaCard({ idea }: IdeaCardProps) {
+  const techStack = Object.values(idea.techStack).flat()
+
   return (
     <Card className="h-full flex flex-col border-border/50 bg-card/50 backdrop-blur hover:bg-card/70 transition-colors">
       <CardHeader className="pb-3">
@@ -32,14 +34,14 @@ export function IdeaCard({ idea }: IdeaCardProps) {
 
         {/* Tech stack */}
         <div className="flex flex-wrap gap-1">
-          {idea.techStack.slice(0, 3).map((tech) => (
+          {techStack.slice(0, 3).map((tech) => (
             <span key={tech} className="px-2 py-1 text-xs bg-muted rounded-md text-muted-foreground">
               {tech}
             </span>
           ))}
-          {idea.techStack.length > 3 && (
+          {techStack.length > 3 && (
             <span className="px-2 py-1 text-xs bg-muted rounded-md text-muted-foreground">
-              +{idea.techStack.length - 3} more
+              +{techStack.length - 3} more
             </span>
           )}
         </div>
@@ -50,7 +52,7 @@ export function IdeaCard({ idea }: IdeaCardProps) {
             <Link href={`/ideas/${idea._id}`}>View details</Link>
           </Button>
           <Button asChild size="sm" className="flex-1">
-            <Link href={`/roadmap/${idea._id}`}>Create roadmap</Link>
+            <Link href={`/ideas/${idea._id}/roadmap`}>Create roadmap</Link>
           </Button>
         </div>
       </CardContent>

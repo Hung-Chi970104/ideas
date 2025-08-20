@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { MockIdea, MockRoadmap } from "@/lib/mock"
+import { Doc } from "@/convex/_generated/dataModel"
 import { ArrowLeft, Download, Calendar } from "lucide-react"
 import Link from "next/link"
 
 interface RoadmapHeaderProps {
-  idea: MockIdea
-  roadmap: MockRoadmap
+  idea: Doc<"ideas">
+  roadmap: Doc<"roadmapWeeks">[]
 }
 
 export function RoadmapHeader({ idea, roadmap }: RoadmapHeaderProps) {
@@ -21,7 +21,7 @@ export function RoadmapHeader({ idea, roadmap }: RoadmapHeaderProps) {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Button asChild variant="ghost" size="sm">
-          <Link href={`/ideas/${idea.id}`}>
+          <Link href={`/ideas/${idea._id}`}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Idea Details
           </Link>
@@ -32,7 +32,7 @@ export function RoadmapHeader({ idea, roadmap }: RoadmapHeaderProps) {
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="space-y-2">
-              <CardTitle className="text-2xl font-heading">{idea.title} - Launch Roadmap</CardTitle>
+              <CardTitle className="text-2xl font-heading">{idea.ideaTitle} - Launch Roadmap</CardTitle>
               <CardDescription className="text-base">
                 Your 6-week plan to build and launch this startup idea
               </CardDescription>
@@ -52,11 +52,11 @@ export function RoadmapHeader({ idea, roadmap }: RoadmapHeaderProps) {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground">Total Tasks:</span>
-              <span className="font-medium">{roadmap.weeks.reduce((acc, week) => acc + week.tasks.length, 0)}</span>
+              <span className="font-medium">{roadmap.reduce((acc, week) => acc + week.tasks.length, 0)}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground">Milestones:</span>
-              <span className="font-medium">{roadmap.weeks.length}</span>
+              <span className="font-medium">{roadmap.length}</span>
             </div>
           </div>
         </CardContent>

@@ -1,14 +1,32 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { MockIdea } from "@/lib/mock"
+import { api } from "@/convex/_generated/api"
+import { Doc, Id } from "@/convex/_generated/dataModel"
+import { useAction } from "convex/react"
 import { Rocket, Clock, DollarSign, Users } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface IdeaDetailSidebarProps {
-  idea: MockIdea
+  idea: Doc<"ideas">
 }
 
 export function IdeaDetailSidebar({ idea }: IdeaDetailSidebarProps) {
+  const router = useRouter()
+  const callGeminiForRoadmaps = useAction(api.ai.callGeminiForRoadmaps);
+  const runAIForRoadmaps = async (ideaId: Id<"ideas">) => {
+    return await callGeminiForRoadmaps({ ideaId });
+  };
+
+  const handleCreateRoadmap = async () => {
+    console.log("Generating Roadmap")
+    const result = await runAIForRoadmaps(idea._id)
+    console.log(result)
+    router.push(`/ideas/${idea._id}/roadmap`)
+  }
+
   return (
     <div className="space-y-6">
       {/* CTA Card */}
@@ -18,11 +36,11 @@ export function IdeaDetailSidebar({ idea }: IdeaDetailSidebarProps) {
             <Rocket className="w-5 h-5" />
             Ready to Build?
           </CardTitle>
-          <CardDescription>Get a detailed 6-week roadmap to launch this idea</CardDescription>
+          <CardDescription>Get a detailed {idea.durationWeek}-week roadmap to launch this idea</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button asChild size="lg" className="w-full">
-            <Link href={`/roadmap/${idea._id}`}>Create Roadmap</Link>
+          <Button onClick={handleCreateRoadmap} size="lg" className="w-full">
+            Create Roadmap
           </Button>
         </CardContent>
       </Card>
@@ -37,7 +55,7 @@ export function IdeaDetailSidebar({ idea }: IdeaDetailSidebarProps) {
             <Clock className="w-4 h-4 text-muted-foreground" />
             <div>
               <p className="text-sm font-medium">Time to MVP</p>
-              <p className="text-xs text-muted-foreground">6-8 weeks</p>
+              <p className="text-xs text-muted-foreground">{idea.durationWeek} Weeks</p>
             </div>
           </div>
 

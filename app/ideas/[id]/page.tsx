@@ -5,13 +5,15 @@ import { IdeaDetailSidebar } from "@/components/ideas/idea-detail-sidebar"
 import { fetchQuery } from "convex/nextjs"
 import { api } from "@/convex/_generated/api"
 import { ClerkLoaded } from "@clerk/nextjs"
+import { auth } from "@clerk/nextjs/server"
 
 export default async function IdeaDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { userId } = await auth();
+  if (!userId) notFound()
 
   const { id } = await params
 
-  const ideas = await fetchQuery(api.ideas.getIdeasForUser)
-
+  const ideas = await fetchQuery(api.ideas.getIdeasForServer, {userId})
   const idea = ideas?.find((idea) => idea._id === id)
 
   if (!idea) {

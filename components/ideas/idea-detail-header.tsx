@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button"
 import { ScoreBadge } from "@/components/score-badge"
-import type { MockIdea } from "@/lib/mock"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
+import { Doc } from "@/convex/_generated/dataModel"
 
 interface IdeaDetailHeaderProps {
-  idea: MockIdea
+  idea: Doc<"ideas">
 }
 
 export function IdeaDetailHeader({ idea }: IdeaDetailHeaderProps) {
+  const techStack = Object.values(idea.techStack).flat()
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
@@ -26,12 +27,12 @@ export function IdeaDetailHeader({ idea }: IdeaDetailHeaderProps) {
         <div className="flex flex-wrap gap-3">
           <ScoreBadge label="Market Fit" score={idea.marketFit} />
           <ScoreBadge label="Trend" score={idea.trend} />
-          <ScoreBadge label="Feasible" score={idea.difficulty} />
+          <ScoreBadge label="Difficulty" score={idea.difficulty} />
           <ScoreBadge label="Niche" score={idea.niche} />
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {idea.techStack.map((tech) => (
+          {techStack.map((tech) => (
             <span key={tech} className="px-3 py-1 text-sm bg-muted rounded-full text-muted-foreground">
               {tech}
             </span>

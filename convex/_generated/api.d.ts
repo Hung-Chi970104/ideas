@@ -18,6 +18,7 @@ import type * as dashboards from "../dashboards.js";
 import type * as http from "../http.js";
 import type * as ideas from "../ideas.js";
 import type * as open_ai from "../open_ai.js";
+import type * as roadmaps from "../roadmaps.js";
 import type * as users from "../users.js";
 
 /**
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   ideas: typeof ideas;
   open_ai: typeof open_ai;
+  roadmaps: typeof roadmaps;
   users: typeof users;
 }>;
 export declare const api: FilterApi<
