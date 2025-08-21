@@ -35,7 +35,7 @@ export function SavedIdeas() {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Saved Ideas</CardTitle>
-            <CardDescription>Ideas you've bookmarked for later review</CardDescription>
+            <CardDescription>Ideas you&apos;ve bookmarked for later review</CardDescription>
           </div>
           <Button variant="outline" size="sm">
             View All

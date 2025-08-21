@@ -279,10 +279,10 @@ export function IntakeForm({ onGenerateIdeas, saveFormData }: IntakeFormProps) {
             </div>
             <div className="flex gap-4">
               <Button
-              type="button"
-              size="lg"
-              className="flex-1 cursor-pointer"
-              onClick={()=> saveFormData(formData)}
+                type="button"
+                size="lg"
+                className="flex-1 cursor-pointer"
+                onClick={() => saveFormData(formData)}
               >
                 Save
               </Button>
@@ -291,7 +291,7 @@ export function IntakeForm({ onGenerateIdeas, saveFormData }: IntakeFormProps) {
                 type="submit"
                 size="lg"
                 className="flex-1 cursor-pointer"
-                >
+              >
                 Generate Ideas
               </Button>
             </div>
